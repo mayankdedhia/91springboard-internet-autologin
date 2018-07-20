@@ -3,6 +3,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 public class SpringboardInternetAutoLogin
 {
 	public static void main(String args[])
@@ -40,7 +45,8 @@ public class SpringboardInternetAutoLogin
 	
 			//System.out.println("Response Code ... " + status);
 	
-			if (redirect) {
+			if (redirect) 
+			{
 	
 				// get redirect url from "location" header field
 				String newUrl = conn.getHeaderField("Location");
@@ -87,6 +93,15 @@ public class SpringboardInternetAutoLogin
 
 		//System.out.println("URL Content... \n" + html.toString());
 		//System.out.println("Done");
-
+	}
+	
+	public void portalAutoLogin() throws InterruptedException
+	{
+		System.setProperty("webdriver.chrome.driver", "C:\\Utils\\chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.get("http://portal.91springboard.com/login");
+		driver.manage().window().maximize();
+		driver.findElement(By.id("emailField")).sendKeys("dummy@test.com");
+		driver.findElement(By.id("passwordField")).sendKeys("dummy.", Keys.ENTER);
 	}
 }
