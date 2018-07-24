@@ -14,6 +14,16 @@ public class SpringboardInternetAutoLogin
 	{
 		isInternetAvailable();
 		System.out.println(isInternetAvailable());
+		
+		if(!isInternetAvailable())
+		{
+			try {
+				portalAutoLogin();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static boolean isInternetAvailable()
@@ -30,41 +40,7 @@ public class SpringboardInternetAutoLogin
 			conn.addRequestProperty("User-Agent", "Mozilla");
 			conn.addRequestProperty("Referer", "google.com");
 	
-			//System.out.println("Request URL ... " + url);
-	
-			boolean redirect = false;
-	
-			// normally, 3xx is redirect
-			int status = conn.getResponseCode();
-			if (status != HttpURLConnection.HTTP_OK) {
-				if (status == HttpURLConnection.HTTP_MOVED_TEMP
-					|| status == HttpURLConnection.HTTP_MOVED_PERM
-						|| status == HttpURLConnection.HTTP_SEE_OTHER)
-				redirect = true;
-			}
-	
-			//System.out.println("Response Code ... " + status);
-	
-			if (redirect) 
-			{
-	
-				// get redirect url from "location" header field
-				String newUrl = conn.getHeaderField("Location");
-	
-				// get the cookie if need, for login
-				String cookies = conn.getHeaderField("Set-Cookie");
-	
-				// open the new connnection again
-				conn = (HttpURLConnection) new URL(newUrl).openConnection();
-				conn.setRequestProperty("Cookie", cookies);
-				conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-				conn.addRequestProperty("User-Agent", "Mozilla");
-				conn.addRequestProperty("Referer", "google.com");
-										
-				//System.out.println("Redirect to URL : " + newUrl);
-	
-			}
-	
+				
 			BufferedReader in = new BufferedReader(
 		                              new InputStreamReader(conn.getInputStream()));
 			String inputLine;
@@ -95,12 +71,13 @@ public class SpringboardInternetAutoLogin
 		//System.out.println("Done");
 	}
 	
-	public void portalAutoLogin() throws InterruptedException
+	public static void portalAutoLogin() throws InterruptedException
 	{
 		System.setProperty("webdriver.chrome.driver", "C:\\Utils\\chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
 		driver.get("http://portal.91springboard.com/login");
 		driver.manage().window().maximize();
+		driver.switchTo().frame("captive-portal");
 		driver.findElement(By.id("emailField")).sendKeys("dummy@test.com");
 		driver.findElement(By.id("passwordField")).sendKeys("dummy.", Keys.ENTER);
 	}
