@@ -12,15 +12,13 @@ public class SpringboardInternetAutoLogin
 {
 	public static void main(String args[])
 	{
-		isInternetAvailable();
-		System.out.println(isInternetAvailable());
-		
-		if(!isInternetAvailable())
+		boolean internetAvailable = false;
+		internetAvailable = isInternetAvailable();
+		if(!internetAvailable)
 		{
 			try {
 				portalAutoLogin();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
