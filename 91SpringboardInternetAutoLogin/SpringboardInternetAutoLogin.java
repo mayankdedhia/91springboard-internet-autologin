@@ -7,10 +7,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 public class SpringboardInternetAutoLogin
 {
@@ -28,8 +32,9 @@ public class SpringboardInternetAutoLogin
 					try 
 					{
 						portalAutoLogin();
-					} catch (InterruptedException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
+						System.out.println("Failed to connect to internet");
 					}
 				}
 				else
@@ -79,7 +84,7 @@ public class SpringboardInternetAutoLogin
 			e.printStackTrace();
 		}
 
-		if (html.indexOf("91Springboard Captive Portal - Login") > -1)
+		if (html == null || html.indexOf("91Springboard Captive Portal - Login") > -1 || html.indexOf("Error 302: Hotspot login required") > -1 )
 		{
 			//System.out.println("internet not on");
 			return false;
@@ -89,20 +94,24 @@ public class SpringboardInternetAutoLogin
 			//System.out.println("internet on");
 			return true;
 		}
-
-		//System.out.println("URL Content... \n" + html.toString());
-		//System.out.println("Done");
 	}
 
 	public static void portalAutoLogin() throws InterruptedException
 	{
 		System.setProperty("webdriver.chrome.driver", "C:\\Utils\\chromedriver.exe");
-		WebDriver driver = new ChromeDriver();
+		
+		ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--headless");
+        
+		WebDriver driver = new ChromeDriver(chromeOptions);
 		driver.get("http://portal.91springboard.com/login");
 		driver.manage().window().maximize();
 		driver.switchTo().frame("captive-portal");
 		driver.findElement(By.id("emailField")).sendKeys("dummy@test.com");
-		driver.findElement(By.id("passwordField")).sendKeys("dummy.", Keys.ENTER);
+		driver.findElement(By.id("passwordField")).sendKeys("dummy.");
+		
+		driver.findElements(By.cssSelector(".form-submit .submit-button")).get(0).click();
+		Thread.sleep(5000);
 		driver.close();
 		System.out.println("Yehhhhhhhhh.....!!");
 		System.out.println("Ho gaya LogIn");
