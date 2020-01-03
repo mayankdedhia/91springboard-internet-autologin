@@ -24,7 +24,7 @@ public class SpringboardInternetAutoLogin
 					internetAvailable = isInternetAvailable();
 					if(!internetAvailable)
 					{					
-						System.out.println("Internet is on working or needs to be connected to");
+						System.out.println("Internet is not working or needs to be connected to");
 						portalAutoLogin();
 					}
 					else
@@ -82,13 +82,14 @@ public class SpringboardInternetAutoLogin
 
 	public static void portalAutoLogin() throws InterruptedException
 	{
+		WebDriver driver = null;
 		try {
 			System.setProperty("webdriver.chrome.driver", "C:\\Utils\\chromedriver.exe");
 			
 			ChromeOptions chromeOptions = new ChromeOptions();
 	        chromeOptions.addArguments("--headless");
 	        
-			WebDriver driver = new ChromeDriver(chromeOptions);
+			driver = new ChromeDriver(chromeOptions);
 			driver.get("http://portal.91springboard.com/login");
 			driver.manage().window().maximize();
 			driver.switchTo().frame("captive-portal");
@@ -102,6 +103,9 @@ public class SpringboardInternetAutoLogin
 			System.out.println("Ho gaya LogIn");
 		}
 		catch (Exception e) {
+			if (driver != null) {
+				driver.quit();
+			}
 			System.out.println("Unable to login via browser");
 			e.printStackTrace();
 		}
