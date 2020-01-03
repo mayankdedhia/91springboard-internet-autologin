@@ -103,11 +103,13 @@ public class SpringboardInternetAutoLogin
 			System.out.println("Ho gaya LogIn");
 		}
 		catch (Exception e) {
+			System.out.println("Unable to login via browser");
+			e.printStackTrace();
+		}
+		finally {
 			if (driver != null) {
 				driver.quit();
 			}
-			System.out.println("Unable to login via browser");
-			e.printStackTrace();
 		}
 	}
 }
